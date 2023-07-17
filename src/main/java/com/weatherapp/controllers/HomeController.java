@@ -18,7 +18,7 @@ import com.weatherapp.services.EmailService;
 import com.weatherapp.services.UserService;
 import com.weatherapp.services.WeatherService;
 
-@Controller
+@RestController
 public class HomeController {
 	
 	@Autowired WeatherService service;
