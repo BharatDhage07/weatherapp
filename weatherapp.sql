@@ -41,11 +41,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`userid`, `uname`, `country`, `city`, `pwd`, `role`) VALUES
-('admin', 'Administrator', 'India', 'Palwal', 'admin', 'admin'),
-('amit@gmail.com', 'Amit Kumar', 'India', 'Pune', 'anand', 'User'),
-('pradeep@gmail.com', 'Pradeep Khulbe', 'India', 'Ashok Nagar', 'anand', 'User'),
-('smart.anandsingh@gmail.com', 'Anand Singh', 'India', 'Palwal', 'anand', 'User'),
-('smart.anandsingh@hotmail.com', 'Anand Boss', 'India', 'Hathin', 'anand', 'User');
+('admin', 'Administrator', 'India', 'Hubli', 'admin', 'admin'),
+
 
 --
 -- Indexes for dumped tables
