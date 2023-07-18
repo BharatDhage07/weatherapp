@@ -33,7 +33,7 @@ public class HomeController {
 		return "index";
 	}
 
-	@PostMapping("/")
+	@PostMapping("/login")
 	public ResponseEntity<String> validate(@RequestParam String userid, @RequestParam String pwd) {
 		User user = uservice.validateUser(userid, pwd);
 		if (user == null) {
