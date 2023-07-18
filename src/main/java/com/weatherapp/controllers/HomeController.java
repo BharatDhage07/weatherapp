@@ -19,6 +19,7 @@ import com.weatherapp.services.UserService;
 import com.weatherapp.services.WeatherService;
 
 @RestController
+@CrossOrigin("*")
 public class HomeController {
 	
 	@Autowired WeatherService service;
