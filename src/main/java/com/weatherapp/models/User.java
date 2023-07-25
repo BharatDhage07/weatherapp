@@ -1,18 +1,40 @@
 package com.weatherapp.models;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "users")
 public class User {
+
+	@Id
+	@Column(nullable = false, unique = true)
 	private String userid;
+
+	@Column(nullable = false)
 	private String uname;
+
+	@Column(nullable = false)
 	private String pwd;
+
+	@Column(nullable = false)
 	private String country;
+
+	@Column(nullable = false)
 	private String city;
+
+	@Column(nullable = false)
 	private String role;
+
+	@Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'sunny'")
 	private String weather;
-	private int points;
-	private LocalDate lastLoginDate;
-	
+
+	@Column(nullable = false)
+	private int bonus_points;
+
+	@Column(name = "last_login_date")
+	private LocalDate last_login_date;
+
 	public String getWeather() {
 		return weather;
 	}
@@ -57,19 +79,19 @@ public class User {
 	}
 
 	public int getPoints() {
-		return points;
+		return bonus_points;
 	}
 
-	public void setPoints(int points) {
-		this.points = points;
+	public void setPoints(int bonus_points) {
+		this.bonus_points = bonus_points;
 	}
 
-	public LocalDate getLastLoginDate() {
-		return lastLoginDate;
+	public LocalDate getLast_login_date() {
+		return last_login_date;
 	}
 
-	public void setLastLoginDate(LocalDate lastLoginDate) {
-		this.lastLoginDate = lastLoginDate;
+	public void setLast_login_date(LocalDate last_login_date) {
+		this.last_login_date = last_login_date;
 	}
 
 	@Override

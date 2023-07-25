@@ -10,10 +10,7 @@ import com.weatherapp.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.weatherapp.services.EmailService;
 import com.weatherapp.services.UserService;
@@ -42,9 +39,9 @@ public class HomeController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
 		}
 		LocalDate currentDate = LocalDate.now();
-		if (user.getLastLoginDate() == null || !user.getLastLoginDate().equals(currentDate)) {
+		if (user.getLast_login_date() == null || !user.getLast_login_date().equals(currentDate)) {
 			user.setPoints(user.getPoints() + 10);
-			user.setLastLoginDate(currentDate);
+			user.setLast_login_date(currentDate);
 			uservice.saveUser(user);
 			return ResponseEntity.ok("Validation successful. You received 10 daily login bonus points.");
 		} else {

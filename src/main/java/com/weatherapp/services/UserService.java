@@ -1,8 +1,6 @@
 package com.weatherapp.services;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -27,7 +25,7 @@ public class UserService {
 				"ON DUPLICATE KEY UPDATE bonus_points=:bonus_points, last_login_date=:last_login_date";
 		MapSqlParameterSource params = (MapSqlParameterSource) getSqlParameterByModel(user);
 		params.addValue("bonus_points", user.getPoints());
-		params.addValue("last_login_date", user.getLastLoginDate());
+		params.addValue("last_login_date", user.getLast_login_date());
 		temp.update(sql, params);
 	}
 	
@@ -62,7 +60,7 @@ public class UserService {
             ps.addValue("pwd", u.getPwd());
             ps.addValue("role", u.getRole());
 			ps.addValue("bonus_points", u.getPoints());
-			ps.addValue("last_login_date", u.getLastLoginDate());
+			ps.addValue("last_login_date", u.getLast_login_date());
         }
         return ps;
     }
@@ -80,7 +78,7 @@ public class UserService {
 			user.setPwd(rs.getString("pwd"));
 			user.setRole(rs.getString("role"));
 			user.setPoints(rs.getInt("bonus_points"));
-			user.setLastLoginDate(rs.getDate("last_login_date").toLocalDate());
+			user.setLast_login_date(rs.getDate("last_login_date").toLocalDate());
 			return user;
 		}
 		
