@@ -1,5 +1,7 @@
 package com.weatherapp.models;
 
+import java.time.LocalDate;
+
 public class User {
 	private String userid;
 	private String uname;
@@ -8,6 +10,8 @@ public class User {
 	private String city;
 	private String role;
 	private String weather;
+	private int points;
+	private LocalDate lastLoginDate;
 	
 	public String getWeather() {
 		return weather;
@@ -51,6 +55,23 @@ public class User {
 	public void setRole(String role) {
 		this.role = role;
 	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public void setPoints(int points) {
+		this.points = points;
+	}
+
+	public LocalDate getLastLoginDate() {
+		return lastLoginDate;
+	}
+
+	public void setLastLoginDate(LocalDate lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
+	}
+
 	@Override
 	public String toString() {
 		return "User [userid=" + userid + ", uname=" + uname + ", pwd=" + pwd + ", country=" + country + ", city="

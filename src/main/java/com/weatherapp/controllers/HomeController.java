@@ -1,5 +1,6 @@
 package com.weatherapp.controllers;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,9 +41,15 @@ public class HomeController {
 		if (user == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
 		}
-		// Perform necessary operations
-		// ...
-		return ResponseEntity.ok("Validation successful");
+		LocalDate currentDate = LocalDate.now();
+		if (user.getLastLoginDate() == null || !user.getLastLoginDate().equals(currentDate)) {
+			user.setPoints(user.getPoints() + 10);
+			user.setLastLoginDate(currentDate);
+			uservice.saveUser(user);
+			return ResponseEntity.ok("Validation successful. You received 10 daily login bonus points.");
+		} else {
+			return ResponseEntity.ok("Validation successful");
+		}
 	}
 
 	@GetMapping("/home")
@@ -57,11 +64,11 @@ public class HomeController {
 		return ResponseEntity.ok(homeData);
 	}
 
-	@GetMapping("/register")
-	public ResponseEntity<String> getRegisterPage() {
-		return ResponseEntity.ok("Register page");
-	}
-
+//	@PostMapping("/register")
+//	public ResponseEntity<String> registerProcess(@RequestBody User user) {
+//		uservice.saveUser(user);
+//		return ResponseEntity.ok("User registered successfully");
+//	}
 	@GetMapping("/notify/{userid}")
 	public ResponseEntity<String> sendNotification(@PathVariable("userid") String userid, String weather) {
 		User nuser = uservice.findByUserid(userid);

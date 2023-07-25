@@ -19,11 +19,16 @@ import com.weatherapp.models.User;
 public class UserService {
 
 	@Autowired NamedParameterJdbcTemplate temp;
-	
+
 	public void saveUser(User user) {
 		user.setRole("User");
-		final String sql="insert into users(userid,uname,country,city,pwd,role) values(:userid,:uname,:country,:city,:pwd,:role)";
-		temp.update(sql, getSqlParameterByModel(user));
+		final String sql = "INSERT INTO users(userid, uname, country, city, pwd, role, bonus_points, last_login_date) " +
+				"VALUES(:userid, :uname, :country, :city, :pwd, :role, :bonus_points, :last_login_date) " +
+				"ON DUPLICATE KEY UPDATE bonus_points=:bonus_points, last_login_date=:last_login_date";
+		MapSqlParameterSource params = (MapSqlParameterSource) getSqlParameterByModel(user);
+		params.addValue("bonus_points", user.getPoints());
+		params.addValue("last_login_date", user.getLastLoginDate());
+		temp.update(sql, params);
 	}
 	
 	public List<User> allUsers() {
@@ -56,6 +61,8 @@ public class UserService {
             ps.addValue("city", u.getCity());
             ps.addValue("pwd", u.getPwd());
             ps.addValue("role", u.getRole());
+			ps.addValue("bonus_points", u.getPoints());
+			ps.addValue("last_login_date", u.getLastLoginDate());
         }
         return ps;
     }
@@ -72,6 +79,8 @@ public class UserService {
 			user.setCity(rs.getString("city"));
 			user.setPwd(rs.getString("pwd"));
 			user.setRole(rs.getString("role"));
+			user.setPoints(rs.getInt("bonus_points"));
+			user.setLastLoginDate(rs.getDate("last_login_date").toLocalDate());
 			return user;
 		}
 		

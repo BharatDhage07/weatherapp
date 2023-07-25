@@ -33,15 +33,17 @@ CREATE TABLE `users` (
   `country` varchar(50) NOT NULL,
   `city` varchar(50) NOT NULL,
   `pwd` varchar(20) NOT NULL,
-  `role` varchar(20) NOT NULL
+  `role` varchar(20) NOT NULL,
+  `bonus_points` int NOT NULL,
+  `last_login_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`userid`, `uname`, `country`, `city`, `pwd`, `role`) VALUES
-('admin', 'Administrator', 'India', 'Hubli', 'admin', 'admin'),
+INSERT INTO `users` (`userid`, `uname`, `country`, `city`, `pwd`, `role`, `bonus_points`, `last_login_date`) VALUES
+('admin', 'Administrator', 'India', 'Hubli', 'admin', 'admin', 100, '2023-07-23')
 
 
 --
