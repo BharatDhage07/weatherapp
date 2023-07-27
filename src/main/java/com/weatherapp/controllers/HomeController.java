@@ -66,15 +66,17 @@ public class HomeController {
 //		uservice.saveUser(user);
 //		return ResponseEntity.ok("User registered successfully");
 //	}
-	@GetMapping("/notify/{userid}")
-	public ResponseEntity<String> sendNotification(@PathVariable("userid") String userid, String weather) {
-		User nuser = uservice.findByUserid(userid);
-		final String message = "Hi ! " + nuser.getUname() + ",\n" +
-				"The city " + nuser.getCity() + " has " + weather + ".\n" +
-				"Be careful.\n";
-		eservice.sendMessage(userid, message);
-		return ResponseEntity.ok("Mail sent successfully");
-	}
+@GetMapping("/notify/{userid}")
+public ResponseEntity<String> sendNotification(@PathVariable("userid") String userid, String weather) {
+	User nuser = uservice.findByUserid(userid);
+	Weather nweather = service.getWeather(nuser.getCountry(), nuser.getCity());
+	WeatherInfo winfo = new WeatherInfo(nuser.getCountry(), nuser.getCity(), nweather);
+	final String message = "Hi " + nuser.getUname() + "!\n" +
+			"The city " + winfo.getCity() + " has " + nweather.getDescription() + " with " + nweather.getCelsiusTemperature() + "°C.\n" +
+			"Be careful.\n";
+	eservice.sendMessage(userid, message);
+	return ResponseEntity.ok("Mail sent successfully");
+}
 
 	@GetMapping("/users")
 	public ResponseEntity<List<User>> getUsersList() {
@@ -86,6 +88,15 @@ public class HomeController {
 			userList.add(user);
 		}
 		return ResponseEntity.ok(userList);
+	}
+
+	@GetMapping("/users/{userid}")
+	public ResponseEntity<User> getUserById(@PathVariable("userid") String userid) {
+		User user = uservice.findByUserid(userid);
+		Weather weather = service.getWeather(user.getCountry(), user.getCity());
+		WeatherInfo winfo = new WeatherInfo(user.getCountry(), user.getCity(), weather);
+		user.setWeather(winfo.getDescription());
+		return ResponseEntity.ok(user);
 	}
 	
 	@GetMapping("/logout")
@@ -121,6 +132,24 @@ public class HomeController {
 			return ResponseEntity.ok(wfinfo);
 		}
 		return ResponseEntity.notFound().build();
+	}
+
+	@PostMapping("/create-article")
+	public ResponseEntity<String> createArticle(@RequestParam String userid, @RequestParam String pwd, @RequestBody Article article){
+		User user = uservice.validateUser(userid, pwd);
+
+		if(user == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+		}
+
+		uservice.createArticle(user, article);
+		return ResponseEntity.ok("Article created successfully.");
+	}
+
+	@GetMapping("/articles")
+	public ResponseEntity<List<Article>> getAllArticles () {
+		List<Article> articles = uservice.getAllArticles();
+		return ResponseEntity.ok(articles);
 	}
 	
 }

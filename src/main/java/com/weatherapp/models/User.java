@@ -2,6 +2,7 @@ package com.weatherapp.models;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -34,6 +35,10 @@ public class User {
 
 	@Column(name = "last_login_date")
 	private LocalDate last_login_date;
+
+	@Column(name = "articles")
+	@OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Article> articles;
 
 	public String getWeather() {
 		return weather;
@@ -92,6 +97,22 @@ public class User {
 
 	public void setLast_login_date(LocalDate last_login_date) {
 		this.last_login_date = last_login_date;
+	}
+
+	public int getBonus_points() {
+		return bonus_points;
+	}
+
+	public void setBonus_points(int bonus_points) {
+		this.bonus_points = bonus_points;
+	}
+
+	public List<Article> getArticles() {
+		return articles;
+	}
+
+	public void setArticles(List<Article> articles) {
+		this.articles = articles;
 	}
 
 	@Override
