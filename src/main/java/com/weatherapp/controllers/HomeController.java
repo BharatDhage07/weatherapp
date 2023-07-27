@@ -61,6 +61,7 @@ public class HomeController {
 		return ResponseEntity.ok(homeData);
 	}
 
+
 //	@PostMapping("/register")
 //	public ResponseEntity<String> registerProcess(@RequestBody User user) {
 //		uservice.saveUser(user);
@@ -79,14 +80,8 @@ public ResponseEntity<String> sendNotification(@PathVariable("userid") String us
 }
 
 	@GetMapping("/users")
-	public ResponseEntity<List<User>> getUsersList() {
-		List<User> userList = new ArrayList<>();
-		for (User user : uservice.allUsers()) {
-			Weather weather = service.getWeather(user.getCountry(), user.getCity());
-			WeatherInfo winfo = new WeatherInfo(user.getCountry(), user.getCity(), weather);
-			user.setWeather(winfo.getDescription());
-			userList.add(user);
-		}
+	public ResponseEntity<List<User>> getUserList(){
+		List<User> userList = uservice.getAllUsersWithArticles();
 		return ResponseEntity.ok(userList);
 	}
 

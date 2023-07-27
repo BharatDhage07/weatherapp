@@ -7,7 +7,7 @@ import java.util.List;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.weatherapp.models.Article;
+import com.weatherapp.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,8 +15,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Service;
-
-import com.weatherapp.models.User;
 
 @Service
 public class UserService {
@@ -26,6 +24,19 @@ public class UserService {
 
 	@Autowired
 	NamedParameterJdbcTemplate jdbcTemplate;
+
+	@Autowired
+	private final UserRepository userRepository;
+
+	@Autowired
+	private ArticleRepository articleRepository;
+
+	@Autowired
+	private WeatherService weatherService;
+
+	public UserService(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
 	public void saveUser(User user) {
 		user.setRole("User");
@@ -38,9 +49,9 @@ public class UserService {
 		temp.update(sql, params);
 	}
 
-	public List<User> allUsers() {
-		return temp.query("select * from users", new UserRowMapper());
-	}
+//	public List<User> allUsers() {
+//		return temp.query("select * from users", new UserRowMapper());
+//	}
 
 	public User validateUser(String userid, String pwd) {
 		try {
@@ -89,6 +100,32 @@ public class UserService {
 		return articles;
 	}
 
+	public List<User> getAllUsers(){
+		return userRepository.findAll();
+	}
+
+	public List<User> getAllUsersWithArticles(){
+		List<User> users = userRepository.findAll();
+
+		for(User user: users) {
+			List<Article> articles = articleRepository.findAllByAuthor(user);
+			user.setArticles(articles);
+			Weather weather = weatherService.getWeather(user.getCountry(), user.getCity());
+			WeatherInfo weatherInfo = new WeatherInfo(user.getCountry(), user.getCity(), weather);
+			user.setWeather(weatherInfo.getDescription());
+		}
+		return users;
+	}
+
+	public List<Article> getArticleByUserId (String userId) {
+		User user = userRepository.findById(userId).orElse(null);
+
+		if(user != null) {
+			return user.getArticles();
+		}
+		return new ArrayList<>();
+	}
+
 	private SqlParameterSource getSqlParameterByModel(User u) {
 		MapSqlParameterSource ps = new MapSqlParameterSource();
 		if (u != null) {
@@ -127,7 +164,7 @@ public class UserService {
 		@Override
 		public Article mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Article article = new Article();
-			article.setId(rs.getInt("id"));
+			article.setId(rs.getLong("id"));
 			article.setTitle(rs.getString("title"));
 			article.setContent(rs.getString("content"));
 			article.setPublishedDate(rs.getTimestamp("published_date").toLocalDateTime());
