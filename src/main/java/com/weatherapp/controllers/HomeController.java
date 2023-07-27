@@ -138,6 +138,7 @@ public ResponseEntity<String> sendNotification(@PathVariable("userid") String us
 		}
 
 		uservice.createArticle(user, article);
+		uservice.saveUser(user);
 		return ResponseEntity.ok("Article created successfully.");
 	}
 

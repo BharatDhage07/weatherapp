@@ -1,5 +1,8 @@
 package com.weatherapp.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -17,6 +20,7 @@ public class Article {
     @Column(nullable = false, length = 1000)
     private String content;
 
+    @JsonIgnoreProperties("articles")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", referencedColumnName = "userid", nullable = false)
     private User author;

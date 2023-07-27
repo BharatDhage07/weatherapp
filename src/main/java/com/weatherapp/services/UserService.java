@@ -65,9 +65,15 @@ public class UserService {
 	}
 
 	public User findByUserid(String userid) {
-		MapSqlParameterSource map = new MapSqlParameterSource();
-		map.addValue("userid", userid);
-		return temp.queryForObject("select * from users where userid=:userid", map, new UserRowMapper());
+		User user = userRepository.findById(userid).orElse(null);
+		if (user != null){
+			List<Article> articles = articleRepository.findAllByAuthor(user);
+			user.setArticles(articles);
+		}
+//		MapSqlParameterSource map = new MapSqlParameterSource();
+//		map.addValue("userid", userid);
+//		return temp.queryForObject("select * from users where userid=:userid", map, new UserRowMapper());
+		return user;
 	}
 
 	public void createArticle(User user, Article article) {
@@ -114,6 +120,11 @@ public class UserService {
 			WeatherInfo weatherInfo = new WeatherInfo(user.getCountry(), user.getCity(), weather);
 			user.setWeather(weatherInfo.getDescription());
 		}
+//		List<User> users1 = userRepository.findAll();
+//		for (User user: users1){
+//			List<Article> articles = user.getArticles();
+//			user.setArticles(articles);
+//		}
 		return users;
 	}
 
