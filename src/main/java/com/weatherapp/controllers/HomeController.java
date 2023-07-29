@@ -129,17 +129,16 @@ public ResponseEntity<String> sendNotification(@PathVariable("userid") String us
 		return ResponseEntity.notFound().build();
 	}
 
-	@PostMapping("/create-article")
-	public ResponseEntity<String> createArticle(@RequestParam String userid, @RequestParam String pwd, @RequestBody Article article){
-		User user = uservice.validateUser(userid, pwd);
+	@PostMapping("/create-article/{userid}")
+	public ResponseEntity<String> createArticle(@PathVariable String userid, @RequestBody Article article){
+		User user = uservice.findByUserid(userid);
 
-		if(user == null) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+		if(user != null) {
+			uservice.createArticle(user, article);
+			uservice.saveUser(user);
+			return ResponseEntity.ok("Article created successfully.");
 		}
-
-		uservice.createArticle(user, article);
-		uservice.saveUser(user);
-		return ResponseEntity.ok("Article created successfully.");
+		return ResponseEntity.notFound().build();
 	}
 
 	@GetMapping("/articles")
